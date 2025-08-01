@@ -193,8 +193,8 @@ if "form_data" not in st.session_state:
 
 # Dynamic main section names based on language
 MAIN_MENU = {
-    "en": ["Intro", "Let's Work"],
-    "zh": ["介紹說明", "開始製作"]
+    "en": ["Intro", "Let's Prompt"],
+    "zh": ["概念說明", "開始製作提示詞"]
 }
 MAIN_ICONS = ["book", "pencil-fill"]
 main_section = option_menu(
@@ -253,14 +253,43 @@ else:
         st.subheader(ui["fill_header"])
         for section in SECTIONS:
             with st.expander(f"{section}", expanded=True):
-                for field in [f for f in FIELDS if f["section"] == section]:
-                    st.session_state["form_data"][field["key"]] = st.text_area(
-                        label=field["title"],
-                        value=st.session_state["form_data"][field["key"]],
-                        placeholder=field["placeholder"],
-                        help=field["description"],
-                        key=field["key"]
-                    )
+                # Action 區塊特殊處理
+                if section == ("Action" if st.session_state["lang"] == "en" else "行動"):
+                    if "action" not in st.session_state["form_data"] or not isinstance(st.session_state["form_data"]["action"], list):
+                        st.session_state["form_data"]["action"] = [""]
+                    actions = st.session_state["form_data"]["action"]
+                    n = len(actions)
+                    for i in range(n):
+                        c1, c2 = st.columns([8,1])
+                        with c1:
+                            actions[i] = st.text_area(
+                                label=f"Action {i+1}",
+                                value=actions[i],
+                                placeholder=FIELDS[[f["key"] for f in FIELDS].index("action")]["placeholder"],
+                                help=FIELDS[[f["key"] for f in FIELDS].index("action")]["description"],
+                                key=f"action_{i}"
+                            )
+                        with c2:
+                            if n > 1:
+                                if st.button("➖", key=f"remove_action_{i}"):
+                                    actions.pop(i)
+                                    st.session_state["form_data"]["action"] = actions
+                                    st.rerun()
+                    if st.button("➕ Add Action", key="add_action"):
+                        actions.append("")
+                        st.session_state["form_data"]["action"] = actions
+                        st.rerun()
+                else:
+                    for field in [f for f in FIELDS if f["section"] == section]:
+                        if field["key"] == "action":
+                            continue
+                        st.session_state["form_data"][field["key"]] = st.text_area(
+                            label=field["title"],
+                            value=st.session_state["form_data"][field["key"]],
+                            placeholder=field["placeholder"],
+                            help=field["description"],
+                            key=field["key"]
+                        )
     with right:
         st.subheader(ui["preview_header"])
         show_preview = st.checkbox(ui["show_preview"], value=True)
@@ -285,5 +314,5 @@ else:
         with col3:
             if st.button(ui["reset_btn"]):
                 st.session_state["form_data"] = {field["key"]: "" for field in FIELDS}
-                st.experimental_rerun()
+                st.rerun()
 

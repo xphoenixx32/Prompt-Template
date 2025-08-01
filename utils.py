@@ -8,6 +8,21 @@ def generate_prompt(form_data, lang="en"):
         str: The generated prompt string.
     """
     if lang == "zh":
+        # 行動區塊處理
+        actions = form_data.get('action')
+        if isinstance(actions, list):
+            if len(actions) == 0 or (len(actions) == 1 and actions[0].strip() == ""):
+                actions_str = '- [搜尋("{行動}")]'  # placeholder
+            else:
+                actions_str = '\n'.join([f'- [搜尋("{a.strip()}")]' for a in actions if a.strip()])
+        elif isinstance(actions, str):
+            if actions.strip() == "":
+                actions_str = '- [搜尋("{行動}")]'
+            else:
+                actions_str = '\n'.join([f'- [搜尋("{a.strip()}")]' for a in actions.split("\n") if a.strip()])
+        else:
+            actions_str = '- [搜尋("{行動}")]'
+
         prompt = f"""# <角色>
 - 你是 {form_data.get('domain') or '{領域}'} 的專家，專精於 {form_data.get('specialization') or '{專精項目}'}。
 
@@ -18,7 +33,7 @@ def generate_prompt(form_data, lang="en"):
 - 讓我們一步一步思考。
 
 ## 行動
-- [搜尋(\"{form_data.get('action') or '{行動}'}\")]
+{actions_str}
 
 ## 觀察
 - 根據行動結果產生輸出。
@@ -32,6 +47,20 @@ def generate_prompt(form_data, lang="en"):
 - 請以 {form_data.get('format') or '{輸出格式}'} 格式，並依照下列結構：{form_data.get('structure') or '{結構}'}
 - 請避免 {form_data.get('unwantedResult') or '{避免結果}'}"""
     else:
+        actions = form_data.get('action')
+        if isinstance(actions, list):
+            if len(actions) == 0 or (len(actions) == 1 and actions[0].strip() == ""):
+                actions_str = '- [Search("{action}")]'  # placeholder
+            else:
+                actions_str = '\n'.join([f'- [Search("{a.strip()}")]' for a in actions if a.strip()])
+        elif isinstance(actions, str):
+            if actions.strip() == "":
+                actions_str = '- [Search("{action}")]'
+            else:
+                actions_str = '\n'.join([f'- [Search("{a.strip()}")]' for a in actions.split("\n") if a.strip()])
+        else:
+            actions_str = '- [Search("{action}")]'
+
         prompt = f"""# <Role>
 - You are an expert in {form_data.get('domain') or '{domain}'} with specialization in {form_data.get('specialization') or '{specialization}'}.
 
@@ -42,7 +71,7 @@ def generate_prompt(form_data, lang="en"):
 - Let's think step by step.
 
 ## Action
-- [Search(\"{form_data.get('action') or '{action}'}\")]
+{actions_str}
 
 ## Observation
 - Based on the action result to generate output.
