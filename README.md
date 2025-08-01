@@ -1,39 +1,39 @@
 # Structured Prompt Generator (Streamlit)
 
-一個基於 Python Streamlit 的結構化 AI 提示詞生成器，支援多語言（中/英），可動態新增多個 Action，並即時預覽、複製與下載標準化 Prompt。
+A modern, user-friendly AI prompt generator built with Python Streamlit. This tool supports both English and Chinese, allows dynamic addition/removal of multiple Actions, and provides real-time preview, copy, and download of standardized prompts.
 
-## 🚀 快速開始
+## 🚀 Quick Start
 
-1. 安裝依賴：
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-2. 啟動應用：
+2. Launch the app:
    ```bash
    streamlit run app.py
    ```
 
-## 🗂️ 主要檔案
-- `app.py`：主程式，Streamlit 前端與互動邏輯
-- `utils.py`：提示詞組裝邏輯
-- `requirements.txt`：依賴套件列表
-- `README.md`：本說明文件
+## 🗂️ Project Structure
+- `app.py`: Main Streamlit app and UI logic
+- `utils.py`: Prompt generation logic
+- `requirements.txt`: Python dependencies
+- `README.md`: Documentation
 
-## ✨ 主要功能
-- **分區填寫**：分為 Role、Task、Action、Context、Output 五大區塊，逐步填寫
-- **Action 支援多條目**：可動態新增/刪除多個 Action，每個行動會獨立顯示於 Prompt
-- **即時預覽**：右側可即時預覽生成的標準化 Prompt
-- **一鍵複製/下載**：支援一鍵複製與下載產生的 Prompt
-- **重置功能**：快速清空所有欄位
-- **多語言切換**：支援中英文介面與 Prompt 結構
+## ✨ Features
+- **Sectioned Input**: Fill in five key sections—Role, Task, Action, Context, Output
+- **Dynamic Multi-Action**: Add or remove multiple actions; each action is rendered as an individual prompt step
+- **Live Preview**: Instantly preview the generated prompt on the right panel
+- **One-Click Copy & Download**: Easily copy or download the generated prompt
+- **Reset Functionality**: Quickly clear all fields
+- **Bilingual Support**: Switch between English and Chinese UI and prompt templates
 
-## 🖥️ 操作說明
-1. 選擇語言（English/中文）
-2. 依序於左側填寫各欄位內容，Action 區塊可點「➕ Add Action」新增多個行動
-3. 右側即時預覽標準化 Prompt，並可複製或下載
-4. 點擊「Reset」可清空所有內容
+## 🖥️ How to Use
+1. Select your language (English/中文)
+2. Fill in each field on the left; use "➕ Add Action" to add as many actions as you need
+3. Instantly preview the structured prompt on the right; use copy or download as needed
+4. Click "Reset" to clear all inputs
 
-## 📝 範例
+## 📝 Example Output
 ```
 # <Role>
 - You are an expert in {domain} with specialization in {specialization}.
@@ -56,4 +56,4 @@
 
 ---
 
-This project provides a modern, user-friendly interface for generating structured AI prompts. Users can flexibly add multiple actions, preview, copy, and download the generated prompt in real time. Suitable for prompt engineering, workflow design, and AI agent task definition.
+This project is ideal for prompt engineering, workflow design, and defining AI agent tasks. Easily generate, preview, and export structured prompts with multiple actions and multilingual support.
