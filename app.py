@@ -166,8 +166,6 @@ APP_I18N = {
         "fill_header": "Fill in Parameters",
         "preview_header": "Preview",
         "show_preview": "Show/Hide Preview",
-        "copy_btn": "Copy Prompt",
-        "copied_msg": "Copied! (Please manually copy the content above)",
         "download_btn": "Download File",
         "reset_btn": "Reset",
         "structure_explanation": """
@@ -191,8 +189,6 @@ APP_I18N = {
         "fill_header": "填入參數",
         "preview_header": "生成預覽",
         "show_preview": "顯示/隱藏 預覽",
-        "copy_btn": "複製 Prompt",
-        "copied_msg": "已複製!（請手動複製上方內容）",
         "download_btn": "下載檔案",
         "reset_btn": "重置",
         "structure_explanation": """### 📋 架構說明\n
@@ -302,7 +298,7 @@ else:
     with left:
         st.subheader(ui["fill_header"])
         for section in SECTIONS:
-            with st.expander(f"{section}", expanded=True):
+            with st.expander(f"{section}", expanded=False):
                 if section == ("Action" if st.session_state["lang"] == "en" else "行動"):
                     action_types = ACTION_TYPES_I18N[st.session_state["lang"]]
                     # initialize as list of dict
@@ -345,13 +341,31 @@ else:
                     for field in [f for f in FIELDS if f["section"] == section]:
                         if field["key"] == "action":
                             continue
-                        st.session_state["form_data"][field["key"]] = st.text_area(
-                            label=field["title"],
-                            value=st.session_state["form_data"][field["key"]],
-                            placeholder=field["placeholder"],
-                            help=field["description"],
-                            key=field["key"]
-                        )
+                        if field["key"] == "structure":
+                            # add selection toggle for optional structure
+                            structure_toggle_label = "Specify Output Structure" if st.session_state["lang"] == "en" else "指定 Output Structure"
+                            if f"show_structure_{section}" not in st.session_state:
+                                st.session_state[f"show_structure_{section}"] = False
+                            show_structure = st.checkbox(structure_toggle_label, value=st.session_state[f"show_structure_{section}"], key=f"structure_toggle_{section}")
+                            st.session_state[f"show_structure_{section}"] = show_structure
+                            if show_structure:
+                                st.session_state["form_data"][field["key"]] = st.text_area(
+                                    label=field["title"],
+                                    value=st.session_state["form_data"][field["key"]],
+                                    placeholder=field["placeholder"],
+                                    help=field["description"],
+                                    key=field["key"]
+                                )
+                            else:
+                                st.session_state["form_data"][field["key"]] = ""
+                        else:
+                            st.session_state["form_data"][field["key"]] = st.text_area(
+                                label=field["title"],
+                                value=st.session_state["form_data"][field["key"]],
+                                placeholder=field["placeholder"],
+                                help=field["description"],
+                                key=field["key"]
+                            )
     with right:
         st.subheader(ui["preview_header"])
         show_preview = st.checkbox(ui["show_preview"], value=True)
@@ -359,12 +373,8 @@ else:
         if show_preview:
             st.code(prompt, language="markdown")
 
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
         with col1:
-            if st.button(ui["copy_btn"]):
-                st.session_state["copied"] = True
-                st.write(ui["copied_msg"])
-        with col2:
             buf = io.StringIO()
             buf.write(prompt)
             st.download_button(
@@ -373,7 +383,7 @@ else:
                 file_name=f"generated_prompt_{st.session_state['lang']}.txt",
                 mime="text/plain"
             )
-        with col3:
+        with col2:
             if st.button(ui["reset_btn"]):
                 st.session_state["form_data"] = {field["key"]: "" for field in FIELDS}
                 st.rerun()
