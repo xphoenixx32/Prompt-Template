@@ -10,11 +10,19 @@ def generate_prompt(form_data, lang="en"):
     if lang == "zh":
         # 行動區塊處理
         actions = form_data.get('action')
+        zh_type_map = {
+            "Search": "搜尋",
+            "Lookup": "查找",
+            "Browse": "瀏覽"
+        }
         if isinstance(actions, list):
-            if len(actions) == 0 or (len(actions) == 1 and actions[0].strip() == ""):
+            if len(actions) == 0 or (len(actions) == 1 and (not actions[0] or not actions[0].get("value", "").strip())):
                 actions_str = '- [搜尋("{行動}")]'  # placeholder
             else:
-                actions_str = '\n'.join([f'- [搜尋("{a.strip()}")]' for a in actions if a.strip()])
+                actions_str = '\n'.join([
+                    f'- [{zh_type_map.get(a.get("type"), a.get("type"))}("{a.get("value", "").strip()}")]'
+                    for a in actions if a.get("value", "").strip()
+                ])
         elif isinstance(actions, str):
             if actions.strip() == "":
                 actions_str = '- [搜尋("{行動}")]'
@@ -49,10 +57,13 @@ def generate_prompt(form_data, lang="en"):
     else:
         actions = form_data.get('action')
         if isinstance(actions, list):
-            if len(actions) == 0 or (len(actions) == 1 and actions[0].strip() == ""):
+            if len(actions) == 0 or (len(actions) == 1 and (not actions[0] or not actions[0].get("value", "").strip())):
                 actions_str = '- [Search("{action}")]'  # placeholder
             else:
-                actions_str = '\n'.join([f'- [Search("{a.strip()}")]' for a in actions if a.strip()])
+                actions_str = '\n'.join([
+                    f'- [{a.get("type", "Search")}("{a.get("value", "").strip()}")]'
+                    for a in actions if a.get("value", "").strip()
+                ])
         elif isinstance(actions, str):
             if actions.strip() == "":
                 actions_str = '- [Search("{action}")]'

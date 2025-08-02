@@ -1,3 +1,53 @@
+# Action types and descriptions (multilingual)
+ACTION_TYPES_I18N = {
+    "en": [
+        {
+            "type": "Search",
+            "label": "Search",
+            "input_label": "Query",
+            "placeholder": "e.g. latest AI news, market trend, ...",
+            "desc": "Used for real-time web search."
+        },
+        {
+            "type": "Lookup",
+            "label": "Lookup",
+            "input_label": "Topic",
+            "placeholder": "e.g. LLM theory, Python syntax, ...",
+            "desc": "Look up knowledge or literature about a specific topic."
+        },
+        {
+            "type": "Browse",
+            "label": "Browse",
+            "input_label": "URL",
+            "placeholder": "e.g. https://arxiv.org/abs/2307..., https://news.ycombinator.com/...",
+            "desc": "Browse a specific web page to gather information."
+        }
+    ],
+    "zh": [
+        {
+            "type": "Search",
+            "label": "搜尋",
+            "input_label": "查詢內容",
+            "placeholder": "例如：最新 AI 新聞、市場趨勢...",
+            "desc": "用於即時網路搜尋。"
+        },
+        {
+            "type": "Lookup",
+            "label": "查找",
+            "input_label": "主題",
+            "placeholder": "例如：LLM 理論、Python 語法...",
+            "desc": "查找特定主題的知識文獻。"
+        },
+        {
+            "type": "Browse",
+            "label": "瀏覽",
+            "input_label": "網址",
+            "placeholder": "例如：https://arxiv.org/abs/2307...、https://news.ycombinator.com/...",
+            "desc": "瀏覽特定網頁以取得資料。"
+        }
+    ]
+}
+
 import streamlit as st
 from utils import generate_prompt
 import io
@@ -83,7 +133,7 @@ FIELDS_I18N = {
         "section": "背景"},
         {"key": "constraints", 
         "title": "限制條件", 
-        "placeholder": "例如：必須符合 GDPR 規範、僅限自然社群流量、無付費廣告預算...", 
+        "placeholder": "例如：必須符合一般資料保護規則的規範、僅限自然社群流量、無付費廣告預算...", 
         "description": "說明限制條件和約束", 
         "section": "背景"},
         {"key": "format", 
@@ -253,21 +303,33 @@ else:
         st.subheader(ui["fill_header"])
         for section in SECTIONS:
             with st.expander(f"{section}", expanded=True):
-                # Action 區塊特殊處理
                 if section == ("Action" if st.session_state["lang"] == "en" else "行動"):
+                    action_types = ACTION_TYPES_I18N[st.session_state["lang"]]
+                    # initialize as list of dict
                     if "action" not in st.session_state["form_data"] or not isinstance(st.session_state["form_data"]["action"], list):
-                        st.session_state["form_data"]["action"] = [""]
+                        st.session_state["form_data"]["action"] = [{"type": action_types[0]["type"], "value": ""}]
                     actions = st.session_state["form_data"]["action"]
                     n = len(actions)
                     for i in range(n):
                         c1, c2 = st.columns([8,1])
                         with c1:
-                            actions[i] = st.text_area(
-                                label=f"Action {i+1}",
-                                value=actions[i],
-                                placeholder=FIELDS[[f["key"] for f in FIELDS].index("action")]["placeholder"],
-                                help=FIELDS[[f["key"] for f in FIELDS].index("action")]["description"],
-                                key=f"action_{i}"
+                            # select Action type
+                            selected_type = st.selectbox(
+                                label=f"Action {i+1} Type",
+                                options=[t["type"] for t in action_types],
+                                format_func=lambda x: next((t["label"] for t in action_types if t["type"] == x), x),
+                                index=next((idx for idx, t in enumerate(action_types) if t["type"] == actions[i].get("type", action_types[0]["type"])), 0),
+                                key=f"action_type_{i}"
+                            )
+                            actions[i]["type"] = selected_type
+                            # get corresponding description and placeholder
+                            type_config = next((t for t in action_types if t["type"] == selected_type), action_types[0])
+                            actions[i]["value"] = st.text_area(
+                                label=f"{type_config['input_label']}",
+                                value=actions[i].get("value", ""),
+                                placeholder=type_config["placeholder"],
+                                help=type_config["desc"],
+                                key=f"action_value_{i}"
                             )
                         with c2:
                             if n > 1:
@@ -276,7 +338,7 @@ else:
                                     st.session_state["form_data"]["action"] = actions
                                     st.rerun()
                     if st.button("➕ Add Action", key="add_action"):
-                        actions.append("")
+                        actions.append({"type": action_types[0]["type"], "value": ""})
                         st.session_state["form_data"]["action"] = actions
                         st.rerun()
                 else:
