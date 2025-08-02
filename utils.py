@@ -52,7 +52,7 @@ def generate_prompt(form_data, lang="en"):
   - {form_data.get('constraints') or '{限制條件}'}
 
 # <輸出格式>
-- 請以 {form_data.get('format') or '{輸出格式}'} 格式，並依照下列結構：{form_data.get('structure') or '{結構}'}
+- 請以 {form_data.get('format') or '{輸出格式}'} 格式，{('並依照下列結構：' + form_data.get('structure')) if form_data.get('structure') else '你可自由決定結構'}
 - 請避免 {form_data.get('unwantedResult') or '{避免結果}'}"""
     else:
         actions = form_data.get('action')
@@ -93,6 +93,6 @@ def generate_prompt(form_data, lang="en"):
   - {form_data.get('constraints') or '{constraints}'}
 
 # <Output Format>
-- Return a {form_data.get('format') or '{format}'} file with the following structure: {form_data.get('structure') or '{...}'}
+- Return a {form_data.get('format') or '{format}'} file{(': with the following structure: ' + form_data.get('structure')) if form_data.get('structure') else '. You may decide the structure freely.'}
 - Don't {form_data.get('unwantedResult') or '{unwanted result}'}"""
     return prompt
