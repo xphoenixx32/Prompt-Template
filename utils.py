@@ -31,29 +31,29 @@ def generate_prompt(form_data, lang="en"):
         else:
             actions_str = '- [搜尋("{行動}")]'
 
-        prompt = f"""# <角色>
-- 你是 {form_data.get('domain') or '{領域}'} 的專家，專精於 {form_data.get('specialization') or '{專精項目}'}。
+        prompt = f"""
+            # <角色>
+            - 你是 {form_data.get('domain') or '{領域}'} 的專家，專精於 {form_data.get('specialization') or '{專精項目}'}。
 
-# <任務>
-- 你的任務是 {form_data.get('specificGoal') or '{具體目標}'}。
+            # <任務>
+            - 你的任務是 {form_data.get('specificGoal') or '{具體目標}'}。
 
-## 推理
-- 讓我們一步一步思考。
+            # <先推理再行動>
+            ## 推理
+            - 讓我們一步一步思考。
+            ## 行動
+            {actions_str}
+            ## 觀察
+            - 依據行動的結果產出答案。
 
-## 行動
-{actions_str}
+            # <背景>
+            - 你需要的背景資訊：
+              - {form_data.get('details') or '{背景細節}'}
+              - {form_data.get('constraints') or '{限制條件}'}
 
-## 觀察
-- 根據行動結果產生輸出。
-
-# <背景>
-- 你需要的背景資訊：
-  - {form_data.get('details') or '{背景細節}'}
-  - {form_data.get('constraints') or '{限制條件}'}
-
-# <輸出格式>
-- 請以 {form_data.get('format') or '{輸出格式}'} 格式，{('並依照下列結構：' + form_data.get('structure')) if form_data.get('structure') else '你可自由決定結構'}
-- 請避免 {form_data.get('unwantedResult') or '{避免結果}'}"""
+            # <輸出格式>
+            - 請以 {form_data.get('format') or '{輸出格式}'} 格式，{('並依照下列結構：' + form_data.get('structure')) if form_data.get('structure') else '結構可自行決定。'}
+            - 請避免 {form_data.get('unwantedResult') or '{避免結果}'}。"""
     else:
         actions = form_data.get('action')
         if isinstance(actions, list):
@@ -72,27 +72,27 @@ def generate_prompt(form_data, lang="en"):
         else:
             actions_str = '- [Search("{action}")]'
 
-        prompt = f"""# <Role>
-- You are an expert in {form_data.get('domain') or '{domain}'} with specialization in {form_data.get('specialization') or '{specialization}'}.
+        prompt = f"""
+            # <Role>
+            - You are an expert in {form_data.get('domain') or '{domain}'} with specialization in {form_data.get('specialization') or '{specialization}'}.
 
-# <Task>
-- Your task is to {form_data.get('specificGoal') or '{specific goal}'}.
+            # <Task>
+            - Your task is to {form_data.get('specificGoal') or '{specific goal}'}.
 
-## Reasoning
-- Let's think step by step.
+            # <ReAct Framework: Reasoning & Action>
+            ## Reasoning
+            - Let's think step by step.
+            ## Action
+            {actions_str}
+            ## Observation
+            - Use the action results to produce the answer.
 
-## Action
-{actions_str}
+            # <Context>
+            - Here is the context you need: 
+              - {form_data.get('details') or '{details}'}
+              - {form_data.get('constraints') or '{constraints}'}
 
-## Observation
-- Based on the action result to generate output.
-
-# <Context>
-- Here is the context you need: 
-  - {form_data.get('details') or '{details}'}
-  - {form_data.get('constraints') or '{constraints}'}
-
-# <Output Format>
-- Return a {form_data.get('format') or '{format}'} file{(': with the following structure: ' + form_data.get('structure')) if form_data.get('structure') else '. You may decide the structure freely.'}
-- Don't {form_data.get('unwantedResult') or '{unwanted result}'}"""
+            # <Output Format>
+            - Return a {form_data.get('format') or '{format}'} file{(': follow this structure: ' + form_data.get('structure')) if form_data.get('structure') else ' (any structure is fine).'}
+            - Don't {form_data.get('unwantedResult') or '{unwanted result}'}"""
     return prompt

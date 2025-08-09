@@ -1,53 +1,3 @@
-# Action types and descriptions (multilingual)
-ACTION_TYPES_I18N = {
-    "en": [
-        {
-            "type": "Search",
-            "label": "Search",
-            "input_label": "Query",
-            "placeholder": "e.g. latest AI news, market trend, ...",
-            "desc": "Used for real-time web search."
-        },
-        {
-            "type": "Lookup",
-            "label": "Lookup",
-            "input_label": "Topic",
-            "placeholder": "e.g. LLM theory, Python syntax, ...",
-            "desc": "Look up knowledge or literature about a specific topic."
-        },
-        {
-            "type": "Browse",
-            "label": "Browse",
-            "input_label": "URL",
-            "placeholder": "e.g. https://arxiv.org/abs/2307..., https://news.ycombinator.com/...",
-            "desc": "Browse a specific web page to gather information."
-        }
-    ],
-    "zh": [
-        {
-            "type": "Search",
-            "label": "搜尋",
-            "input_label": "查詢內容",
-            "placeholder": "例如：最新 AI 新聞、市場趨勢...",
-            "desc": "用於即時網路搜尋。"
-        },
-        {
-            "type": "Lookup",
-            "label": "查找",
-            "input_label": "主題",
-            "placeholder": "例如：LLM 理論、Python 語法...",
-            "desc": "查找特定主題的知識文獻。"
-        },
-        {
-            "type": "Browse",
-            "label": "瀏覽",
-            "input_label": "網址",
-            "placeholder": "例如：https://arxiv.org/abs/2307...、https://news.ycombinator.com/...",
-            "desc": "瀏覽特定網頁以取得資料。"
-        }
-    ]
-}
-
 import streamlit as st
 from utils import generate_prompt
 import io
@@ -56,100 +6,150 @@ from streamlit_option_menu import option_menu
 st.set_page_config(page_title="Structured Prompt Generator", layout="wide")
 st.page_icon = "🎩"
 
+# Action types and descriptions (multilingual)
+ACTION_TYPES_I18N = {
+    "en": [
+        {
+            "type": "Search",
+            "label": "Search",
+            "input_label": "Query",
+            "placeholder": "e.g. latest AI news, market trend, competitor updates",
+            "desc": "Find up-to-date info on the web."
+        },
+        {
+            "type": "Lookup",
+            "label": "Lookup",
+            "input_label": "Topic",
+            "placeholder": "e.g. LLM theory basics, Python list vs tuple, SWOT analysis",
+            "desc": "Quickly learn a concept or topic."
+        },
+        {
+            "type": "Browse",
+            "label": "Browse",
+            "input_label": "URL",
+            "placeholder": "e.g. https://arxiv.org/abs/2307..., https://news.ycombinator.com/...",
+            "desc": "Read a specific web page."
+        }
+    ],
+    "zh": [
+        {
+            "type": "Search",
+            "label": "搜尋",
+            "input_label": "查詢內容",
+            "placeholder": "例如：最新 AI 新聞、市場趨勢、競品資訊",
+            "desc": "在網路上找最新資訊。"
+        },
+        {
+            "type": "Lookup",
+            "label": "查找",
+            "input_label": "主題",
+            "placeholder": "例如：LLM 基本觀念、Python list 與 tuple 差異、SWOT 分析",
+            "desc": "快速了解一個概念或主題。"
+        },
+        {
+            "type": "Browse",
+            "label": "瀏覽",
+            "input_label": "網址",
+            "placeholder": "例如：https://arxiv.org/abs/2307...、https://news.ycombinator.com/...",
+            "desc": "閱讀指定的網頁內容。"
+        }
+    ]
+}
+
 # Define fields and sections
 FIELDS_I18N = {
     "en": [
         {"key": "domain", 
         "title": "Domain", 
         "placeholder": "e.g. digital marketing, machine learning, financial planning, software development...", 
-        "description": "Define the main professional domain.", 
+        "description": "The general field you are working in.", 
         "section": "Role"},
         {"key": "specialization", 
         "title": "Specialization", 
         "placeholder": "e.g. brand strategy and social media, deep learning and NLP, investment analysis, full-stack web development...", 
-        "description": "Define the specific area of expertise.", 
+        "description": "Your focus inside the domain.", 
         "section": "Role"},
         {"key": "specificGoal", 
         "title": "Specific Goal", 
         "placeholder": "e.g. create a comprehensive social media marketing strategy for a tech startup, analyze customer behavior patterns from sales data...", 
-        "description": "Describe the concrete goal clearly.", 
+        "description": "What you want to achieve in one sentence.", 
         "section": "Task"},
         {"key": "action", 
         "title": "Action", 
         "placeholder": "e.g. market research for social media trends, customer segmentation analysis, competitive analysis...", 
-        "description": "Define the specific action required.", 
+        "description": "List the steps the assistant should take. Use \"Add Action\" for multiple steps.", 
         "section": "Action"},
         {"key": "details", 
         "title": "Context Details", 
         "placeholder": "e.g. Target audience: young professionals aged 25-35, Budget: $50k monthly, Industry: B2B SaaS...", 
-        "description": "Provide background info and key details.", 
+        "description": "Key facts the assistant should know (audience, budget, industry...).", 
         "section": "Context"},
         {"key": "constraints", 
         "title": "Constraints", 
         "placeholder": "e.g. Must comply with GDPR regulations, Limited to organic social media only, No budget for paid advertising...", 
-        "description": "Specify constraints and requirements.", 
+        "description": "Rules or limits to follow.", 
         "section": "Context"},
         {"key": "format", 
         "title": "Output Format", 
         "placeholder": "e.g. markdown, JSON, PDF report, Excel spreadsheet...", 
-        "description": "Specify output file format.", 
+        "description": "Choose the file or text format for the answer.", 
         "section": "Output"},
         {"key": "structure", 
         "title": "Structure", 
         "placeholder": "e.g. {title, executive_summary, analysis, recommendations, timeline}, {headers: [], data: [], charts: []}...", 
-        "description": "Define output structure.", 
+        "description": "If you want a fixed structure, describe it here.", 
         "section": "Output"},
         {"key": "unwantedResult", 
         "title": "Unwanted Result", 
         "placeholder": "e.g. provide generic advice without specific data, include unverified claims, exceed 2000 words...", 
-        "description": "Clearly state unwanted results.", 
+        "description": "What to avoid in the answer.", 
         "section": "Output"}
     ],
     "zh": [
         {"key": "domain", 
         "title": "領域", 
         "placeholder": "例如：數位行銷、機器學習、財務規劃、軟體開發...", 
-        "description": "定義主要專業領域", 
+        "description": "你正在處理的主要範疇。", 
         "section": "角色"},
         {"key": "specialization", 
         "title": "專精項目", 
         "placeholder": "例如：品牌策略與社群媒體、深度學習與 NLP、投資分析、全端網頁開發...", 
-        "description": "定義具體專精項目", 
+        "description": "在該領域中的專注方向。", 
         "section": "角色"},
         {"key": "specificGoal", 
         "title": "具體目標", 
         "placeholder": "例如：為新創科技公司制定完整社群行銷策略、分析銷售數據中的顧客行為模式...", 
-        "description": "明確描述具體目標", 
+        "description": "一句話說清楚你想達成什麼。", 
         "section": "任務"},
         {"key": "action", 
         "title": "行動", 
         "placeholder": "例如：社群趨勢市場調查、顧客分群分析、競品分析...", 
-        "description": "定義需要執行的具體行動", 
+        "description": "列出助理要做的步驟。要多步驟可用「新增行動」。", 
         "section": "行動"},
         {"key": "details", 
         "title": "背景細節", 
         "placeholder": "例如：目標族群：25-35 歲年輕專業人士、預算：每月五萬美金、產業：B2B SaaS...", 
-        "description": "提供背景資訊和重要細節", 
+        "description": "助理需要知道的關鍵資訊（族群、預算、產業等）。", 
         "section": "背景"},
         {"key": "constraints", 
         "title": "限制條件", 
         "placeholder": "例如：必須符合一般資料保護規則的規範、僅限自然社群流量、無付費廣告預算...", 
-        "description": "說明限制條件和約束", 
+        "description": "需要遵守的規則或限制。", 
         "section": "背景"},
         {"key": "format", 
         "title": "輸出格式", 
         "placeholder": "例如：markdown、JSON、PDF 報告、Excel 試算表...", 
-        "description": "指定輸出檔案格式", 
+        "description": "選擇輸出的檔案或文字格式。", 
         "section": "輸出"},
         {"key": "structure", 
         "title": "結構", 
         "placeholder": "例如：{title, executive_summary, analysis, recommendations, timeline}、{headers: [], data: [], charts: []}...", 
-        "description": "定義輸出結構", 
+        "description": "若需要固定結構，請在此描述。", 
         "section": "輸出"},
         {"key": "unwantedResult", 
         "title": "避免結果", 
         "placeholder": "例如：僅給出泛泛建議、包含未經查證的說法、超過 2000 字...", 
-        "description": "明確不希望出現的結果", 
+        "description": "你不希望答案出現什麼。", 
         "section": "輸出"}
     ]
 }
@@ -162,47 +162,49 @@ SECTIONS_I18N = {
 APP_I18N = {
     "en": {
         "title": "Structured Prompt Generator",
-        "subtitle": "A standardized prompt generator.",
+        "subtitle": "Create clear, consistent prompts step by step.",
         "fill_header": "Fill in Parameters",
         "preview_header": "Preview",
-        "show_preview": "Show/Hide Preview",
+        "show_preview": "Show/Hide preview",
         "download_btn": "Download File",
         "reset_btn": "Reset",
         "structure_explanation": """
-        ### 📋 Structure Explanation\n
-        - **Role:** Define the professional domain and specialization\n
-        - **Task:** Clearly describe the specific task to accomplish\n
-        - **Action:** Specify the required search or analysis actions\n
-        - **Context:** Provide background information and constraints\n
-        - **Output:** Specify output format and unwanted results\n
-        ---\n
-        ### 💡 Usage Tips\n
-        # - All fields are optional\n
-        # - It is recommended to fill at least Domain and Task\n
-        # - Unfilled fields will keep `{placeholder}` format\n
-        # - Domain and Specialization are now filled separately\n
-        # """
+        ### 📋 Structure Explanation
+
+        - **Role:** Your domain and specialization
+        - **Task:** What you want to achieve
+        - **Action:** The steps to take (Search / Lookup / Browse)
+        - **Context:** Important background and constraints
+        - **Output:** Format, structure, and what to avoid
+        ---
+        ### 💡 Usage Tips
+        - All fields are optional
+        - For best results, fill Domain and Task first
+        - Empty fields will remain as `{placeholder}` in the preview
+        - Domain and Specialization are filled separately
+        """
     },
     "zh": {
         "title": "結構化提示詞生成器",
-        "subtitle": "基於標準化架構的提示詞生成器",
+        "subtitle": "一步一步建立清楚、可重複的提示詞",
         "fill_header": "填入參數",
         "preview_header": "生成預覽",
-        "show_preview": "顯示/隱藏 預覽",
+        "show_preview": "顯示/隱藏預覽",
         "download_btn": "下載檔案",
         "reset_btn": "重置",
-        "structure_explanation": """### 📋 架構說明\n
-        - **角色:** 定義專業領域和專精項目\n
-        - **任務:** 明確說明要完成的具體任務\n
-        - **行動:** 指定需要執行的搜尋或分析動作\n
-        - **背景:** 提供背景資訊和限制條件\n
-        - **輸出:** 規範輸出格式和避免的結果\n
-        ---\n
-        ### 💡 使用提示\n
-        - 所有欄位都是選填\n
-        - 建議至少填寫領域和目標\n
-        - 未填寫的欄位會保持 `{placeholder}` 格式\n
-        - 領域和專精項目現在分開填寫\n
+        "structure_explanation": """### 📋 架構說明
+
+        - **角色：** 你的領域與專精
+        - **任務：** 想要達成的目標
+        - **行動：** 要採取的步驟（搜尋／查找／瀏覽）
+        - **背景：** 重要背景與限制
+        - **輸出：** 格式、結構與需要避免的內容
+        ---
+        ### 💡 使用提示
+        - 所有欄位皆為選填
+        - 建議先填「領域」與「目標」
+        - 未填寫的欄位會以 `{placeholder}` 顯示在預覽
+        - 「領域」與「專精」分開填寫
         """
     }
 }
@@ -239,8 +241,8 @@ if "form_data" not in st.session_state:
 
 # Dynamic main section names based on language
 MAIN_MENU = {
-    "en": ["Intro", "Let's Prompt"],
-    "zh": ["概念說明", "開始製作提示詞"]
+    "en": ["Intro", "Build Prompt"],
+    "zh": ["概念說明", "開始建立提示詞"]
 }
 MAIN_ICONS = ["book", "pencil-fill"]
 main_section = option_menu(
@@ -254,18 +256,18 @@ if main_section == MAIN_MENU[st.session_state["lang"]][0]:
     # Visually enhanced structure explanation (1x5 columns with icons)
     STRUCTURE_ITEMS = {
         "en": [
-            {"icon": "🧑‍💼", "title": "Role", "desc": "Define the professional domain and specialization."},
-            {"icon": "🎯", "title": "Task", "desc": "Describe the specific task to accomplish."},
-            {"icon": "🔍", "title": "Action", "desc": "Specify required search or analysis actions."},
-            {"icon": "📚", "title": "Context", "desc": "Provide background info and constraints."},
-            {"icon": "📤", "title": "Output", "desc": "Specify output format and unwanted results."},
+            {"icon": "🧑‍💼", "title": "Role", "desc": "Your domain and specialization."},
+            {"icon": "🎯", "title": "Task", "desc": "What you want to achieve."},
+            {"icon": "🔍", "title": "Action", "desc": "Steps to search, learn, or browse."},
+            {"icon": "📚", "title": "Context", "desc": "Background details and rules."},
+            {"icon": "📤", "title": "Output", "desc": "Format, structure, and avoid list."},
         ],
         "zh": [
-            {"icon": "🧑‍💼", "title": "角色", "desc": "定義專業領域和專精項目"},
-            {"icon": "🎯", "title": "任務", "desc": "明確說明要完成的具體任務"},
-            {"icon": "🔍", "title": "行動", "desc": "指定需要執行的搜尋或分析動作"},
-            {"icon": "📚", "title": "背景", "desc": "提供背景資訊和限制條件"},
-            {"icon": "📤", "title": "輸出", "desc": "規範輸出格式和避免的結果"},
+            {"icon": "🧑‍💼", "title": "角色", "desc": "你的領域與專精。"},
+            {"icon": "🎯", "title": "任務", "desc": "想達成的目標。"},
+            {"icon": "🔍", "title": "行動", "desc": "要搜尋、查找或瀏覽的步驟。"},
+            {"icon": "📚", "title": "背景", "desc": "背景細節與規則。"},
+            {"icon": "📤", "title": "輸出", "desc": "格式、結構與避免清單。"},
         ]
     }
     st.divider()
@@ -310,8 +312,11 @@ else:
                         c1, c2 = st.columns([8,1])
                         with c1:
                             # select Action type
+                            action_type_label = (
+                                f"no.{i+1} Action Type" if st.session_state["lang"] == "en" else f"第 {i+1} 個行動類型"
+                            )
                             selected_type = st.selectbox(
-                                label=f"Action {i+1} Type",
+                                label=action_type_label,
                                 options=[t["type"] for t in action_types],
                                 format_func=lambda x: next((t["label"] for t in action_types if t["type"] == x), x),
                                 index=next((idx for idx, t in enumerate(action_types) if t["type"] == actions[i].get("type", action_types[0]["type"])), 0),
@@ -329,11 +334,13 @@ else:
                             )
                         with c2:
                             if n > 1:
-                                if st.button("➖", key=f"remove_action_{i}"):
+                                remove_label = "🗑️ Remove" if st.session_state["lang"] == "en" else "🗑️ 刪除"
+                                if st.button(remove_label, key=f"remove_action_{i}"):
                                     actions.pop(i)
                                     st.session_state["form_data"]["action"] = actions
                                     st.rerun()
-                    if st.button("➕ Add Action", key="add_action"):
+                    add_label = "✅ Add Action" if st.session_state["lang"] == "en" else "✅ 新增行動"
+                    if st.button(add_label, key="add_action"):
                         actions.append({"type": action_types[0]["type"], "value": ""})
                         st.session_state["form_data"]["action"] = actions
                         st.rerun()
@@ -343,7 +350,7 @@ else:
                             continue
                         if field["key"] == "structure":
                             # add selection toggle for optional structure
-                            structure_toggle_label = "Specify Output Structure" if st.session_state["lang"] == "en" else "指定 Output Structure"
+                            structure_toggle_label = "Specify Output Structure" if st.session_state["lang"] == "en" else "指定輸出結構"
                             if f"show_structure_{section}" not in st.session_state:
                                 st.session_state[f"show_structure_{section}"] = False
                             show_structure = st.checkbox(structure_toggle_label, value=st.session_state[f"show_structure_{section}"], key=f"structure_toggle_{section}")
