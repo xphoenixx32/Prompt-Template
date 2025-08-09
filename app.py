@@ -186,7 +186,7 @@ APP_I18N = {
     },
     "zh": {
         "title": "結構化提示詞生成器",
-        "subtitle": "一步一步建立清楚、可重複的提示詞",
+        "subtitle": "一步一步建立清楚、可迭代的提示詞",
         "fill_header": "填入參數",
         "preview_header": "生成預覽",
         "show_preview": "顯示/隱藏預覽",
