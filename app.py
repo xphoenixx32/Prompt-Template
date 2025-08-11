@@ -394,9 +394,9 @@ else:
                 if st.button(ui["reset_btn"]):
                     st.session_state["form_data"] = {field["key"]: "" for field in FIELDS}
                     st.rerun()
-                st.code(prompt, language="markdown")
-                # Explicit copy-to-clipboard button to ensure availability across Streamlit versions/themes
-
+            
+            st.code(prompt, language="markdown")
+            # Explicit copy-to-clipboard button to ensure availability across Streamlit versions/themes
             escaped = json.dumps(prompt)
             components.html(
                 f"""
