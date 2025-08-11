@@ -157,8 +157,8 @@ FIELDS_I18N = {
 }
 
 SECTIONS_I18N = {
-    "en": ["Role", "Task", "Context", "Action", "Output"],
-    "zh": ["角色", "任務", "情境", "行動", "輸出"]
+    "en": ["① Role", "② Task", "③ Context", "④ Action", "⑤ Output"],
+    "zh": ["① 角色", "② 任務", "③ 情境", "④ 行動", "⑤ 輸出"]
 }
 
 APP_I18N = {
@@ -303,7 +303,7 @@ else:
         st.subheader(ui["fill_header"])
         for section in SECTIONS:
             with st.expander(f"{section}", expanded=False):
-                if section == ("Action" if st.session_state["lang"] == "en" else "行動"):
+                if section == ("④ Action" if st.session_state["lang"] == "en" else "④ 行動"):
                     action_types = ACTION_TYPES_I18N[st.session_state["lang"]]
                     # initialize as list of dict
                     if "action" not in st.session_state["form_data"] or not isinstance(st.session_state["form_data"]["action"], list):
