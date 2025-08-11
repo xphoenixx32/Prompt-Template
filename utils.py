@@ -38,6 +38,11 @@ def generate_prompt(form_data, lang="en"):
             # <任務>
             - 你的任務是 {form_data.get('specificGoal') or '{具體目標}'}。
 
+            # <情境>
+            - 你需要的背景資訊：
+              - {form_data.get('details') or '{背景細節}'}
+              - {form_data.get('constraints') or '{限制條件}'}
+
             # <先推理再行動>
             ## 推理
             - 讓我們一步一步思考。
@@ -45,11 +50,6 @@ def generate_prompt(form_data, lang="en"):
             {actions_str}
             ## 觀察
             - 依據行動的結果產出答案。
-
-            # <背景>
-            - 你需要的背景資訊：
-              - {form_data.get('details') or '{背景細節}'}
-              - {form_data.get('constraints') or '{限制條件}'}
 
             # <輸出格式>
             - 請以 {form_data.get('format') or '{輸出格式}'} 格式，{('並依照下列結構：' + form_data.get('structure')) if form_data.get('structure') else '結構可自行決定。'}
@@ -79,6 +79,11 @@ def generate_prompt(form_data, lang="en"):
             # <Task>
             - Your task is to {form_data.get('specificGoal') or '{specific goal}'}.
 
+            # <Context>
+            - Here is the context you need: 
+              - {form_data.get('details') or '{details}'}
+              - {form_data.get('constraints') or '{constraints}'}
+
             # <ReAct Framework: Reasoning & Action>
             ## Reasoning
             - Let's think step by step.
@@ -86,11 +91,6 @@ def generate_prompt(form_data, lang="en"):
             {actions_str}
             ## Observation
             - Use the action results to produce the answer.
-
-            # <Context>
-            - Here is the context you need: 
-              - {form_data.get('details') or '{details}'}
-              - {form_data.get('constraints') or '{constraints}'}
 
             # <Output Format>
             - Return a {form_data.get('format') or '{format}'} file{(': follow this structure: ' + form_data.get('structure')) if form_data.get('structure') else ' (any structure is fine).'}

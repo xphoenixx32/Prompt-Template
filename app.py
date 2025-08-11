@@ -130,12 +130,12 @@ FIELDS_I18N = {
         "title": "背景細節", 
         "placeholder": "例如：目標族群：25-35 歲年輕專業人士、預算：每月五萬美金、產業：B2B SaaS...", 
         "description": "助理需要知道的關鍵資訊（族群、預算、產業等）。", 
-        "section": "背景"},
+        "section": "情境"},
         {"key": "constraints", 
         "title": "限制條件", 
         "placeholder": "例如：必須符合一般資料保護規則的規範、僅限自然社群流量、無付費廣告預算...", 
         "description": "需要遵守的規則或限制。", 
-        "section": "背景"},
+        "section": "情境"},
         {"key": "format", 
         "title": "輸出格式", 
         "placeholder": "例如：markdown、JSON、PDF 報告、Excel 試算表...", 
@@ -155,8 +155,8 @@ FIELDS_I18N = {
 }
 
 SECTIONS_I18N = {
-    "en": ["Role", "Task", "Action", "Context", "Output"],
-    "zh": ["角色", "任務", "行動", "背景", "輸出"]
+    "en": ["Role", "Task", "Context", "Action", "Output"],
+    "zh": ["角色", "任務", "情境", "行動", "輸出"]
 }
 
 APP_I18N = {
@@ -173,8 +173,8 @@ APP_I18N = {
 
         - **Role:** Your domain and specialization
         - **Task:** What you want to achieve
-        - **Action:** The steps to take (Search / Lookup / Browse)
         - **Context:** Important background and constraints
+        - **Action:** The steps to take (Search / Lookup / Browse)
         - **Output:** Format, structure, and what to avoid
         ---
         ### 💡 Usage Tips
@@ -196,8 +196,8 @@ APP_I18N = {
 
         - **角色：** 你的領域與專精
         - **任務：** 想要達成的目標
+        - **情境：** 重要背景與限制
         - **行動：** 要採取的步驟（搜尋／查找／瀏覽）
-        - **背景：** 重要背景與限制
         - **輸出：** 格式、結構與需要避免的內容
         ---
         ### 💡 使用提示
@@ -258,15 +258,15 @@ if main_section == MAIN_MENU[st.session_state["lang"]][0]:
         "en": [
             {"icon": "🧑‍💼", "title": "Role", "desc": "Your domain and specialization."},
             {"icon": "🎯", "title": "Task", "desc": "What you want to achieve."},
-            {"icon": "🔍", "title": "Action", "desc": "Steps to search, learn, or browse."},
             {"icon": "📚", "title": "Context", "desc": "Background details and rules."},
+            {"icon": "🔍", "title": "Action", "desc": "Steps to search, learn, or browse."},
             {"icon": "📤", "title": "Output", "desc": "Format, structure, and avoid list."},
         ],
         "zh": [
             {"icon": "🧑‍💼", "title": "角色", "desc": "你的領域與專精。"},
             {"icon": "🎯", "title": "任務", "desc": "想達成的目標。"},
+            {"icon": "📚", "title": "情境", "desc": "背景細節與規則。"},
             {"icon": "🔍", "title": "行動", "desc": "要搜尋、查找或瀏覽的步驟。"},
-            {"icon": "📚", "title": "背景", "desc": "背景細節與規則。"},
             {"icon": "📤", "title": "輸出", "desc": "格式、結構與避免清單。"},
         ]
     }
@@ -378,7 +378,7 @@ else:
         show_preview = st.checkbox(ui["show_preview"], value=True)
         prompt = generate_prompt(st.session_state["form_data"], lang=st.session_state["lang"])
         if show_preview:
-            st.code(prompt, language="markdown")
+            st.markdown(prompt)
 
         col1, col2 = st.columns(2)
         with col1:
