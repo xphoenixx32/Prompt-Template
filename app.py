@@ -378,7 +378,7 @@ else:
         show_preview = st.checkbox(ui["show_preview"], value=True)
         prompt = generate_prompt(st.session_state["form_data"], lang=st.session_state["lang"])
         if show_preview:
-            st.markdown(prompt)
+            st.code(prompt, language="markdown")
 
         col1, col2 = st.columns(2)
         with col1:

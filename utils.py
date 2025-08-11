@@ -1,3 +1,6 @@
+import textwrap
+
+
 def generate_prompt(form_data, lang="en"):
     """
     Generate the structured AI prompt based on input fields.
@@ -95,4 +98,4 @@ def generate_prompt(form_data, lang="en"):
             # <Output Format>
             - Return a {form_data.get('format') or '{format}'} file{(': follow this structure: ' + form_data.get('structure')) if form_data.get('structure') else ' (any structure is fine).'}
             - Don't {form_data.get('unwantedResult') or '{unwanted result}'}"""
-    return prompt
+    return textwrap.dedent(prompt)
