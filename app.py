@@ -302,8 +302,13 @@ else:
     with left:
         st.subheader(ui["fill_header"])
         for section in SECTIONS:
+            # Normalize numbered labels like "① Role" -> "Role" or "① 角色" -> "角色"
+            if isinstance(section, str) and " " in section and section[0] in "①②③④⑤⑥⑦⑧⑨⑩":
+                base_section = section.split(" ", 1)[1]
+            else:
+                base_section = section
             with st.expander(f"{section}", expanded=False):
-                if section == ("④ Action" if st.session_state["lang"] == "en" else "④ 行動"):
+                if base_section == ("Action" if st.session_state["lang"] == "en" else "行動"):
                     action_types = ACTION_TYPES_I18N[st.session_state["lang"]]
                     # initialize as list of dict
                     if "action" not in st.session_state["form_data"] or not isinstance(st.session_state["form_data"]["action"], list):
@@ -347,16 +352,16 @@ else:
                         st.session_state["form_data"]["action"] = actions
                         st.rerun()
                 else:
-                    for field in [f for f in FIELDS if f["section"] == section]:
+                    for field in [f for f in FIELDS if f["section"] == base_section]:
                         if field["key"] == "action":
                             continue
                         if field["key"] == "structure":
                             # add selection toggle for optional structure
                             structure_toggle_label = "Specify Output Structure" if st.session_state["lang"] == "en" else "指定輸出結構"
-                            if f"show_structure_{section}" not in st.session_state:
-                                st.session_state[f"show_structure_{section}"] = False
-                            show_structure = st.checkbox(structure_toggle_label, value=st.session_state[f"show_structure_{section}"], key=f"structure_toggle_{section}")
-                            st.session_state[f"show_structure_{section}"] = show_structure
+                            if f"show_structure_{base_section}" not in st.session_state:
+                                st.session_state[f"show_structure_{base_section}"] = False
+                            show_structure = st.checkbox(structure_toggle_label, value=st.session_state[f"show_structure_{base_section}"], key=f"structure_toggle_{base_section}")
+                            st.session_state[f"show_structure_{base_section}"] = show_structure
                             if show_structure:
                                 st.session_state["form_data"][field["key"]] = st.text_area(
                                     label=field["title"],
