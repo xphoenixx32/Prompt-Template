@@ -380,8 +380,23 @@ else:
         show_preview = st.checkbox(ui["show_preview"], value=True)
         prompt = generate_prompt(st.session_state["form_data"], lang=st.session_state["lang"])
         if show_preview:
-            st.code(prompt, language="markdown")
-            # Explicit copy-to-clipboard button to ensure availability across Streamlit versions/themes
+            col1, col2 = st.columns(2)
+            with col1:
+                buf = io.StringIO()
+                buf.write(prompt)
+                st.download_button(
+                    label=ui["download_btn"],
+                    data=buf.getvalue(),
+                    file_name=f"generated_prompt_{st.session_state['lang']}.txt",
+                    mime="text/plain"
+                )
+            with col2:
+                if st.button(ui["reset_btn"]):
+                    st.session_state["form_data"] = {field["key"]: "" for field in FIELDS}
+                    st.rerun()
+                st.code(prompt, language="markdown")
+                # Explicit copy-to-clipboard button to ensure availability across Streamlit versions/themes
+
             escaped = json.dumps(prompt)
             components.html(
                 f"""
@@ -407,19 +422,4 @@ else:
                 """,
                 height=0,
             )
-
-        col1, col2 = st.columns(2)
-        with col1:
-            buf = io.StringIO()
-            buf.write(prompt)
-            st.download_button(
-                label=ui["download_btn"],
-                data=buf.getvalue(),
-                file_name=f"generated_prompt_{st.session_state['lang']}.txt",
-                mime="text/plain"
-            )
-        with col2:
-            if st.button(ui["reset_btn"]):
-                st.session_state["form_data"] = {field["key"]: "" for field in FIELDS}
-                st.rerun()
 
