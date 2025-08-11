@@ -75,7 +75,7 @@ def generate_prompt(form_data, lang="en"):
         lines.append(f"  - {form_data.get('details') or '{details}'}")
         lines.append(f"  - {form_data.get('constraints') or '{constraints}'}")
         lines.append("")
-        lines.append("# <ReAct Framework: Reasoning & Action>")
+        lines.append("# <ReAct Framework>")
         lines.append("## Reasoning")
         lines.append("- Let's think step by step.")
         lines.append("## Action")

@@ -51,7 +51,7 @@ A modern, user-friendly AI prompt generator built with Python Streamlit. This to
   - {details}
   - {constraints}
 
-# <ReAct Framework: Reasoning & Action>
+# <ReAct Framework>
 ## Reasoning
 - Let's think step by step.
 ## Action
