@@ -1,6 +1,8 @@
 import streamlit as st
 from utils import generate_prompt
 import io
+import json
+import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Structured Prompt Generator", layout="wide")
@@ -379,6 +381,32 @@ else:
         prompt = generate_prompt(st.session_state["form_data"], lang=st.session_state["lang"])
         if show_preview:
             st.code(prompt, language="markdown")
+            # Explicit copy-to-clipboard button to ensure availability across Streamlit versions/themes
+            escaped = json.dumps(prompt)
+            components.html(
+                f"""
+                <div style='margin-top:8px'>
+                  <button id='copy-btn' style='padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#f7f7f7;cursor:pointer;'>📋 Copy</button>
+                  <span id='copy-status' style='margin-left:8px;color:#888;'></span>
+                </div>
+                <script>
+                  const btn = document.getElementById('copy-btn');
+                  const statusEl = document.getElementById('copy-status');
+                  const text = {escaped};
+                  btn.addEventListener('click', async () => {{
+                    try {{
+                      await navigator.clipboard.writeText(text);
+                      statusEl.textContent = 'Copied!';
+                      setTimeout(() => statusEl.textContent = '', 1500);
+                    }} catch(e) {{
+                      statusEl.textContent = 'Copy failed';
+                      setTimeout(() => statusEl.textContent = '', 1500);
+                    }}
+                  }});
+                </script>
+                """,
+                height=0,
+            )
 
         col1, col2 = st.columns(2)
         with col1:
